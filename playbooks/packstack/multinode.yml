@@ -1,0 +1,76 @@
+---
+# Steps
+# =======
+# - Provision
+# - Validate the nodes
+# - Bootstrap: Prepare the slaves
+# - Configure packstack answer-file
+#       - apply rdo config
+#       - apply multinode config
+# - Deploy Openstack using packstack
+# - Reboot all test-vms
+# - Tempest slave
+# - Run tempest [task]
+# - Collect logs
+# - CleanUp
+#
+
+- name: Sets up a multinode openstack deployment using packstack
+  gather_facts: no
+  hosts: localhost
+  tasks:
+    - { include: ../../tasks/provision/create_nodes.yml,
+        nodes: [
+            { name: node_1, groups: ['controller', 'compute'] }
+        ],
+        tags: provision
+      }
+
+
+    - name: Validate configuration for this playbook
+      fail: msg="... No VM {{item}} in {{ groups }}" #"
+      ### TODO: support specifying multiple compute nodes as group
+      #when: "not ( '{{item}}' in groups and groups['{{ item }}'] ) "
+      when: "not '{{item}}' in groups['all'] "
+      with_items: [controller, compute]
+      tags: validation
+
+
+- include: common/bootstrap.yml  tags=bootstrap
+- include: multinode/icehouse/workarounds.yml tags=workaround
+
+- name: Setup packstack on Controller
+  hosts: controller
+  roles:
+      - packstack/rdo
+      - packstack/multinode
+  tags: generate-config
+
+- include: multinode/setup-ssh-keys.yml tags=setup-trust
+
+
+- name: Run packstack
+  hosts: controller
+  roles:
+    - { role: packstack/runner }
+  tags: run-packstack
+
+- name: Reboot controller and compute
+  hosts:
+    - compute
+    - controller
+  tasks:
+      - include: ../../tasks/common/reboot.yml
+  tags: reboot
+
+#- name: Setup tempest on Tempest slave
+  #hosts: tempest
+  #roles:
+      #- { role: tempest }
+  #tasks:
+    #- { include: ../../tasks/openstack/run_tempest.yml }
+
+#- name: Collect logs
+  #hosts: local
+  #roles:
+      #- { role: log_collector }
