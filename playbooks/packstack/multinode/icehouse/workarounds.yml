@@ -1,4 +1,5 @@
 ---
+### use var_files to store rdo-icehouse-fedora-20.yml
 
 - name: Workarounds | specific to fedora distro
   hosts: Fedora

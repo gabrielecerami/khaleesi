@@ -1,7 +1,7 @@
 ---
 # Steps
 # =======
-# - Provision
+# - Provision *** take that out ***
 # - Validate the nodes
 # - Bootstrap: Prepare the slaves
 # - Configure packstack answer-file
@@ -15,28 +15,13 @@
 # - CleanUp
 #
 
-- name: Sets up a multinode openstack deployment using packstack
-  gather_facts: no
-  hosts: localhost
-  tasks:
-    - { include: ../../tasks/provision/create_nodes.yml,
-        nodes: [
-            { name: node_1, groups: ['controller', 'compute'] }
-        ],
-        tags: provision
-      }
+### enable to provison vm
+#- include: multinode/provision.yml
 
-
-    - name: Validate configuration for this playbook
-      fail: msg="... No VM {{item}} in {{ groups }}" #"
-      ### TODO: support specifying multiple compute nodes as group
-      #when: "not ( '{{item}}' in groups and groups['{{ item }}'] ) "
-      when: "not '{{item}}' in groups['all'] "
-      with_items: [controller, compute]
-      tags: validation
-
-
+- include: multinode/validate-nodes.yml
 - include: common/bootstrap.yml  tags=bootstrap
+
+# apply pre-packstack workarouds
 - include: multinode/icehouse/workarounds.yml tags=workaround
 
 - name: Setup packstack on Controller
