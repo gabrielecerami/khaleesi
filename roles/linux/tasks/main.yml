@@ -1,4 +1,9 @@
 ---
+- debug: msg="Setting SELINUX to {{selinux}}"   #"
+  when: "'info' in config.verbosity"
+
+- shell: setenforce {{selinux}}
+
 - name: be sure ntp is installed
   yum: name=ntp state=installed
   tags: ntp
@@ -13,7 +18,3 @@
   service: name=ntpd state=running enabled=yes
   tags: ntp
 
-- debug: msg="Setting SELINUX to {{selinux}}"   #"
-  when: "'info' in config.verbosity"
-
-- shell: setenforce {{selinux}}
