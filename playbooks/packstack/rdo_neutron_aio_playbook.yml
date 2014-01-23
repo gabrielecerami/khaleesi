@@ -13,15 +13,14 @@
     - { role: set_facts }
     - { role: wait_for_hosts }
 
+- include: common/bootstrap.yml tags=bootstrap
+
 - name: packstack
   hosts: packstack
   user: root
   roles:
-    - { role: common }
-    - { role: linux-common }
-    - { role: packstack/packstack-common }
     - { role: packstack/rdo }
     - { role: packstack/packstack-neutron-aio }
-    - { role: packstack/packstack-installer }
+    - { role: packstack/runner }
     - { role: tempest }
 
