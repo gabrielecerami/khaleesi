@@ -2,8 +2,6 @@
 set -e -u
 
 #pip install ansible > /dev/null 2>&1
-#wget http://file.rdu.redhat.com/~whayutin/test_key.pem
-
 
 image_id_for_name() {
     local name=$1; shift
@@ -20,8 +18,8 @@ main() {
     local default_flavor_id=4
     local default_floating_nw_name='external'
 
-    local key_file=${KEY_FILE:-~/Developer/Hat/Lab/weshay_sthaha.pem }
-    local key_name=${SSH_KEY_NAME:-'weshay_sthaha'}
+    local key_file=${KEY_FILE:-/key.pem }
+    local key_name=${SSH_KEY_NAME:-'key'}
     chmod 600 $key_file
 
     local node_prefix=${NODE_PREFIX:-st}
@@ -39,7 +37,7 @@ cat > settings.yml <<-EOF
 # job config
 
 workarounds_disabled: yes
-selinux: Permissive
+selinux: permissive  #[permissive, enforcing]
 
 config:
   product: rdo
@@ -77,10 +75,13 @@ nodes:
 epel_repo: download.fedoraproject.org/pub/epel/6/
 gpg_check: 0
 ntp_server: clock.redhat.com
-remote_user: fedora
-sudo: yes
-#sudo_user: root
 reboot_delay: +1
+
+# Currently sudo w/ NOPASSWD must be enabled in /etc/sudoers for sudo to work
+sudo: yes
+remote_user: fedora
+sudo_user: root
+
 EOF
 
 

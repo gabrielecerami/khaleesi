@@ -1,6 +1,10 @@
 nova.ini
 nosetests.xml
 bugzilla.ini
+ansible.cfg
+group_vars/all
+settings.yml
+hosts
 *.py[co]
 # Sublime projects
 *.sublime-*

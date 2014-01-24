@@ -2,7 +2,7 @@
 - debug: msg="Setting SELINUX to {{selinux}}"   #"
   when: "'info' in config.verbosity"
 
-- shell: setenforce {{selinux}}
+- selinux: policy=targeted state={{selinux}}
 
 - name: be sure ntp is installed
   yum: name=ntp state=installed
