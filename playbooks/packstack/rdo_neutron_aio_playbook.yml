@@ -8,7 +8,7 @@
 - name: Set facts for hosts
   hosts: packstack
   gather_facts: False
-  user: root
+  user: "{{ remote_user }}"
   roles:
     - { role: set_facts }
     - { role: wait_for_hosts }
@@ -17,7 +17,7 @@
 
 - name: packstack
   hosts: packstack
-  user: root
+  user: "{{ remote_user }}"
   roles:
     - { role: packstack/rdo }
     - { role: packstack/packstack-neutron-aio }
