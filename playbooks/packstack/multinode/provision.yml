@@ -11,7 +11,6 @@
     - controller
     - compute
   gather_facts: False
-  user: root
   roles:
     - { role: set_facts }
     - { role: wait_for_hosts }

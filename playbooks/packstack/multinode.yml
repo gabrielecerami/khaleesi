@@ -16,7 +16,7 @@
 #
 
 ### enable to provison vm
-#- include: multinode/provision.yml
+- include: multinode/provision.yml
 
 - include: multinode/validate-nodes.yml
 - include: common/bootstrap.yml  tags=bootstrap

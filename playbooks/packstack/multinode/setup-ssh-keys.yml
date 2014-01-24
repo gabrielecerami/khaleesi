@@ -1,9 +1,31 @@
 ---
+- name: check user
+  hosts: controller
+  tasks:
+    - name: whoami
+      command: whoami
+      su: yes
+      su_user: root
+      register: result
+      tags: setup-keys
+
+- name: Create ssh key if one does not exist
+  hosts: controller
+  tasks:
+      - name: create key
+        #this will not overwrite an existing key
+        user: name=root generate_ssh_key=yes
+        sudo: yes
+        sudo_user: root
+        tags: setup-keys
+
 - name: Setup packstack on Controller
   hosts: controller
   tasks:
       - name: fetch ssh-key generated from controller
-        fetch: src=/root/.ssh/id_rsa.pub dest=/tmp/ flat=yes
+        fetch: src=/root/.ssh/id_rsa.pub dest=/tmp/ flat=yes fail_on_missing=yes
+        sudo: yes
+        sudo_user: root
         tags: setup-keys
 
 - name: Copy ssh-key to compute hosts
@@ -11,6 +33,8 @@
   tasks:
     - name: copy ssh-key to compute
       authorized_key: user=root key="{{ lookup('file', '/tmp/id_rsa.pub') }}" #"
+      sudo: yes
+      sudo_user: root
       tags: setup-keys
 
 
