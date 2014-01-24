@@ -89,7 +89,6 @@ reboot_delay: +1
 sudo: yes
 remote_user: fedora
 sudo_user: root
-
 EOF
 
 

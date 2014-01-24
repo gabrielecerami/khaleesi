@@ -48,14 +48,16 @@
       - include: ../../tasks/common/reboot.yml
   tags: reboot
 
-#- name: Setup tempest on Tempest slave
-  #hosts: tempest
-  #roles:
-      #- { role: tempest }
-  #tasks:
-    #- { include: ../../tasks/openstack/run_tempest.yml }
+- name: Run tempest
+  hosts: controller
+  vars:
+    controller_name: "{{ ansible_ssh_host }}"
+    controller_fqdn: "{{ ansible_ssh_host }}"
+  user: root
+  roles:
+    - { role: tempest, controller_fqdn: "{{ controller_name }}"}
 
 #- name: Collect logs
-  #hosts: local
-  #roles:
-      #- { role: log_collector }
+# hosts: local
+#  roles:
+#   - { role: log_collector }
