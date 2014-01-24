@@ -20,8 +20,8 @@ main() {
     local default_flavor_id=4
     local default_floating_nw_name='external'
 
-    local key_file=${KEY_FILE:-~/Developer/Hat/Lab/vm.pem}
-    local key_name=${SSH_KEY_NAME:-'test_key'}
+    local key_file=${KEY_FILE:-~/Developer/Hat/Lab/weshay_sthaha.pem }
+    local key_name=${SSH_KEY_NAME:-'weshay_sthaha'}
     chmod 600 $key_file
 
     local node_prefix=${NODE_PREFIX:-st}
@@ -77,9 +77,9 @@ nodes:
 epel_repo: download.fedoraproject.org/pub/epel/6/
 gpg_check: 0
 ntp_server: clock.redhat.com
-remote_user: root
+remote_user: fedora
 sudo: yes
-sudo_user: root
+#sudo_user: root
 reboot_delay: +1
 EOF
 
