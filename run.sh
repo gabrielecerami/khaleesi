@@ -21,6 +21,7 @@ main() {
     local net_1=9c90efad-85de-401c-b056-2727c54c6fb4
 
     local tags=${TAGS:-''}
+    local tempest_tests=${TEMPEST_TEST_NAME:-'tempest'}
 
 cat > settings.yml <<-EOF
 # job config
@@ -76,8 +77,7 @@ tempest:
     puppet_file: /tmp/tempest_init.pp
     checkout_dir: /var/lib/tempest
     revision: 'stable/havana'
-    #test_name: 'tempest'
-    test_name: 'tempest.scenario.test_network_basic_ops'
+    test_name: $tempest_tests
     exclude:
         files:
             - test_server_rescue
