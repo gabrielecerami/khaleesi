@@ -1,20 +1,9 @@
 #! /usr/bin/env bash
 set -e -u
 
-#pip install ansible > /dev/null 2>&1
-
-image_id_for_name() {
-    local name=$1; shift
-    glance image-list | egrep " $name " |  cut -f2 -d '|' | tr -d ' '
-}
-
-network_id_for_name() {
-    local name=$1; shift
-    neutron net-list  -F id -- --name=$name | awk  'NR==4' | awk '{print $2}'
-}
-
 main() {
     local rdo_icehouse_f20_baseurl='http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/fedora-20'
+    local rdo_icehouse_epel6_baseurl='http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6'
     local default_flavor_id=4
     local default_floating_nw_name='external'
 
@@ -22,16 +11,14 @@ main() {
     local key_name=${SSH_KEY_NAME:-'key'}
     chmod 600 $key_file
 
-    local node_prefix=${NODE_PREFIX:-st}
-
-    local image_id=${IMAGE_ID:-$(image_id_for_name 'Fedora 20')}
+    local node_prefix=${NODE_PREFIX:-ci}
+    local image_id=${IMAGE_ID:-'10a4092c-6ec9-4ddf-b97c-b0f8dff0958e'}
     local flavor_id=${FLAVOR_ID:-$default_flavor_id}
-
     local floating_nw_name=${FLOATING_NETWORK_NAME:-$default_floating_nw_name}
+    local network_name=${NETWORK_NAME:-'default'}
 
     local baseurl=${REPO_BASEURL:-$rdo_icehouse_f20_baseurl}
-    local network_name=${NETWORK_NAME:-'default'}
-    local net_1=$(network_id_for_name $network_name)
+    local net_1=9c90efad-85de-401c-b056-2727c54c6fb4
 
 cat > settings.yml <<-EOF
 # job config
@@ -80,14 +67,15 @@ reboot_delay: +1
 # Currently sudo w/ NOPASSWD must be enabled in /etc/sudoers for sudo to work
 sudo: yes
 remote_user: fedora
+#remote_user: cloud-user
 sudo_user: root
 
 tempest:
     puppet_file: /tmp/tempest_init.pp
     checkout_dir: /var/lib/tempest
     revision: 'stable/havana'
-    test_name: 'tempest'
-    #test_name: 'tempest.scenario.test_network_basic_ops'
+    #test_name: 'tempest'
+    test_name: 'tempest.scenario.test_network_basic_ops'
     exclude:
         files:
             - test_server_rescue
