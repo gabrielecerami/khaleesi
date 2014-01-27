@@ -12,7 +12,7 @@
 
 
 - name: Run tempest
-  script: run_tempest.sh {{ tempest['checkout_dir'] }} "{{ tempest_test_name }}"
+  script: run_tempest.sh {{ tempest['checkout_dir'] }} {{ tempest['test_name'] }}
        --exclude-files {{ tempest['exclude']['files'] }}
        --exclude-tests {{ tempest['exclude']['tests'] }}
   tags:

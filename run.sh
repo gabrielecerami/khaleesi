@@ -82,6 +82,27 @@ sudo: yes
 remote_user: fedora
 sudo_user: root
 
+tempest:
+    puppet_file: /tmp/tempest_init.pp
+    checkout_dir: /var/lib/tempest
+    revision: 'stable/havana'
+    test_name: 'tempest'
+    #test_name: 'tempest.scenario.test_network_basic_ops'
+    exclude:
+        files:
+            - test_server_rescue
+            - test_server_actions
+            - test_load_balancer
+            - test_vpnaas_extensions
+        tests:
+            - test_rescue_unrescue_instance
+            - test_create_get_delete_object
+            - test_create_volume_from_snapshot
+            - test_service_provider_list
+            - test_ec2_
+            - test_stack_crud_no_resources
+            - test_stack_list_responds
+
 EOF
 
 
