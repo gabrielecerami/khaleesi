@@ -11,7 +11,7 @@ main() {
     local key_name=${SSH_KEY_NAME:-'key'}
     chmod 600 $key_file
 
-    local node_prefix=${NODE_PREFIX:-ci}
+    local node_prefix=${NODE_PREFIX:-st}
     local image_id=${IMAGE_ID:-'10a4092c-6ec9-4ddf-b97c-b0f8dff0958e'}
     local flavor_id=${FLAVOR_ID:-$default_flavor_id}
     local floating_nw_name=${FLOATING_NETWORK_NAME:-$default_floating_nw_name}
@@ -19,6 +19,8 @@ main() {
 
     local baseurl=${REPO_BASEURL:-$rdo_icehouse_f20_baseurl}
     local net_1=9c90efad-85de-401c-b056-2727c54c6fb4
+
+    local tags=${TAGS:-''}
 
 cat > settings.yml <<-EOF
 # job config
@@ -102,7 +104,7 @@ EOF
 
 ansible-playbook -i local_hosts  \
  playbooks/packstack/rdo_neutron_aio_playbook.yml \
-    --extra-vars @settings.yml -v -u fedora
+    --extra-vars @settings.yml -v -u fedora $tags
 }
 
 main "$@"
