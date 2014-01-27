@@ -93,7 +93,7 @@ EOF
 
 ansible-playbook -i local_hosts  \
  playbooks/packstack/rdo_neutron_aio_playbook.yml \
-    --extra-vars @settings.yml -v
+    --extra-vars @settings.yml -v -u fedora
 }
 
 main "$@"
