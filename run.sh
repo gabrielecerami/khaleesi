@@ -18,7 +18,7 @@ main() {
     local network_name=${NETWORK_NAME:-'default'}
 
     local baseurl=${REPO_BASEURL:-$rdo_icehouse_f20_baseurl}
-    local net_1=9c90efad-85de-401c-b056-2727c54c6fb4
+    local net_1=${NET_1:-'9c90efad-85de-401c-b056-2727c54c6fb4'}
 
     local tags=${TAGS:-''}
     local tempest_tests=${TEMPEST_TEST_NAME:-'tempest'}
