@@ -15,3 +15,4 @@ aio_config_options:
       - { option: 'CONFIG_NOVA_COMPUTE_PRIVIF', value: 'eth0'}
       - { option: 'CONFIG_NOVA_NETWORK_PRIVIF', value: 'eth0'}
       - { option: 'CONFIG_PROVISION_DEMO', value: 'y'}
+      - { option: 'CONFIG_PROVISION_TEMPEST', value: 'y'}
