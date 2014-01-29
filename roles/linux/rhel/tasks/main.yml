@@ -29,8 +29,13 @@
     - Yum clean all
     - yum -y update to latest packages
 
+- name: install httplib2
+  yum: name=http://download.devel.redhat.com/brewroot/packages/python-httplib2/0.6.0/6.el7/noarch/python-httplib2-0.6.0-6.el7.noarch.rpm
+  when: ansible_distribution == "RedHat" and ansible_distribution_version == "7.0"
+
 - name: Ensure httplib2
   yum: name=python-httplib2 state=present
+  when: not (ansible_distribution == "RedHat" and ansible_distribution_version == "7.0")
 
 #WORKAROUND
 - name: Ensure /etc/sysconfig/iptables-services

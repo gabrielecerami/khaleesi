@@ -4,21 +4,21 @@ set -e -u
 main() {
     local rdo_icehouse_f20_baseurl='http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/fedora-20'
     local rdo_icehouse_epel6_baseurl='http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/epel-6'
-    local default_flavor_id=4
+    local default_flavor_id=3
     local default_floating_nw_name='external'
 
-    local key_file=${KEY_FILE:-/key.pem }
-    local key_name=${SSH_KEY_NAME:-'key'}
+    local key_file=${KEY_FILE:-testkkey.pem }
+    local key_name=${SSH_KEY_NAME:-'testkey'}
     chmod 600 $key_file
 
-    local node_prefix=${NODE_PREFIX:-st}
-    local image_id=${IMAGE_ID:-'10a4092c-6ec9-4ddf-b97c-b0f8dff0958e'}
+    local node_prefix=${NODE_PREFIX:-gc}
+    local image_id=${IMAGE_ID:-'cbf028d7-397c-4b2f-94b2-4b7f44e1936b'}
     local flavor_id=${FLAVOR_ID:-$default_flavor_id}
     local floating_nw_name=${FLOATING_NETWORK_NAME:-$default_floating_nw_name}
     local network_name=${NETWORK_NAME:-'default'}
 
     local baseurl=${REPO_BASEURL:-$rdo_icehouse_f20_baseurl}
-    local net_1=${NET_1:-'9c90efad-85de-401c-b056-2727c54c6fb4'}
+    local net_1=${NET_1:-'0209ad36-6f76-4e97-a0d3-895bf100e7c2'}
 
     local tags=${TAGS:-''}
     local tempest_tests=${TEMPEST_TEST_NAME:-'tempest'}
@@ -59,10 +59,14 @@ nodes:
     flavor_id: "{{ flavor_id }}"
     network_ids: "{{ network_ids }}"
     hostname: packstack.example.com
-    groups: "packstack,openstack_nodes"
+    groups: "RHEL,packstack,openstack_nodes"
 
 #VM settings
-epel_repo: download.fedoraproject.org/pub/epel/6/
+rhel_os_repo: download.eng.bos.redhat.com/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/
+rhel_updates_repo: download.eng.bos.redhat.com/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/
+rhel_optional_repo: download.eng.bos.redhat.com/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/
+epel_repo: download.fedoraproject.org/pub/epel/beta/7/
+
 gpg_check: 0
 ntp_server: clock.redhat.com
 reboot_delay: +1
@@ -102,9 +106,9 @@ EOF
 ##export ANSIBLE_ROLES_PATH=$WORKSPACE/khaleesi/roles
 ##export ANSIBLE_LIBRARY=$WORKSPACE/khaleesi/library:$VIRTUAL_ENV/share/ansible
 
-ansible-playbook -i local_hosts  \
+ansible-playbook -vvvvvv -i local_hosts  \
  playbooks/packstack/rdo_neutron_aio_playbook.yml \
-    --extra-vars @settings.yml -v -u fedora $tags
+    --extra-vars @settings.yml -v -u cloud-user $tags
 }
 
 main "$@"
